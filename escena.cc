@@ -186,6 +186,12 @@ void Escena::dibujar()
       }
    }
 
+   // Comentar para desactivar las texturas
+   // glEnable(GL_TEXTURE_2D);
+
+   // Si las texturas estan activadas, ponemos el booleano correspondiente a true
+   if(glIsEnabled(GL_TEXTURE_2D)) texturas_activadas = true;
+
    // seleccion del modo de dibujado
    if(tipo_dibujo==INMEDIATO) modo_dibujado = 1;
    
@@ -328,7 +334,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break ;
         case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
-         printf("Opciones disponibles: \n'L': Linea; \n'P': Puntos \n'S': Solido\n'M': Ajedrez\n'I': Iluminacion\n");
+         printf("Opciones disponibles: \n'L': Linea; \n'P': Puntos \n'S': Solido\n'G': Ajedrez\n'I': Iluminacion\n");
          modoMenu=SELVISUALIZACION;
          break ;
        case 'D' :
@@ -592,26 +598,26 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break;
 
 
-         // // // AJEDREZ
-         // case 'M':
-         //    if (modoMenu == SELVISUALIZACION)
-         //    {
-         //       if (tipo_visual != AJEDREZ && !modo_visual[4] && !modo_visual[3])
-         //       {
-         //          printf("Visualizacion en modo AJEDREZ activada.\n");
-         //          tipo_visual = AJEDREZ;
-         //          modo_visual[3] = true;
-         //          modo_visual[4] = false;
-         //          break;
-         //       }
-         //       else
-         //       {
-         //          printf("Visualizacion en modo AJEDREZ desactivada.\n");
-         //          tipo_visual = DEFAULT;
-         //          modo_visual[3] = false;
-         //       }
-         //    }
-         // break;
+         // // AJEDREZ
+         case 'G':
+            if (modoMenu == SELVISUALIZACION)
+            {
+               if (tipo_visual != AJEDREZ && !modo_visual[4] && !modo_visual[3])
+               {
+                  printf("Visualizacion en modo AJEDREZ activada.\n");
+                  tipo_visual = AJEDREZ;
+                  modo_visual[3] = true;
+                  modo_visual[4] = false;
+                  break;
+               }
+               else
+               {
+                  printf("Visualizacion en modo AJEDREZ desactivada.\n");
+                  tipo_visual = DEFAULT;
+                  modo_visual[3] = false;
+               }
+            }
+         break;
 
          // ILUMINADO
          case 'I':

@@ -87,24 +87,37 @@ class Escena
    LuzPosicional * luz_p = nullptr;
    LuzDireccional * luz_d = nullptr;
    LuzDireccional * luz_d2 = nullptr;
+   //
 
+   // texturas
+    Textura * minecraft = nullptr;
+    Textura * madera = nullptr;
+    Textura * cocacola = nullptr;
+    Textura * cabinaTF = nullptr;
+   //
     //Array para comprobar que modos de visualizacion esta activado
     bool modo_visual[5] = {false,false,true,false,false}; // puntos, lineas, solido, ajedrez, iluminado
 
     // Booleanos para las tapas
     bool tapas = true;
+
+    // Booleanos para las luces
     bool pos_activada = true;
     bool direc_activada = false;
+
+    
+
+    // Booleanos para controlar las animaciones
+    bool animacion_activada = false;
     bool alfa = false;
     bool beta = false;
-
-    // Booleanos para los grados de libertad
-    bool animacion_activada = false;
 
     bool grado_uno = false,
          grado_dos = false,
          grado_tres = false;
 
+    // Booleanos para las texturas
+    bool texturas_activadas = false;
     
    public:
 

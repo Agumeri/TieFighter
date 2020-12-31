@@ -365,3 +365,7 @@ void Malla3D::calcular_normales(){
 void Malla3D::setMaterial(Material mat){
    m = new Material(mat);
 }
+
+void Malla3D::setTextura(Textura text){
+   textura = new Textura(text);
+}
