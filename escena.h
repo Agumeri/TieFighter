@@ -93,7 +93,7 @@ class Escena
 
     // Booleanos para las tapas
     bool tapas = true;
-    bool pos_activada = false;
+    bool pos_activada = true;
     bool direc_activada = false;
     bool alfa = false;
     bool beta = false;
@@ -120,5 +120,6 @@ class Escena
 	void teclaEspecial( int Tecla1, int x, int y );
     
     void animarModeloJerarquico();
+    void animarGradosLibertad();
 };
 #endif

@@ -90,7 +90,11 @@ void special_keys( int tecla, int x, int y )
 // Método utilizado para invocar a un método de la escena que
 // se encargará de ir actualizando los parámetros
 void funcion_idle() {
-   if (escena != 0) escena->animarModeloJerarquico();
+   if (escena != 0){
+      escena->animarModeloJerarquico();
+      // escena->animarGradosLibertad();
+   } 
+      
    
    glutPostRedisplay();
 }

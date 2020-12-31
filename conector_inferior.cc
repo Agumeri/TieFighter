@@ -2,20 +2,21 @@
 #include "conector_inferior.h"
 
 ConectorInferior::ConectorInferior(){
-    Tupla4f goma_negra_ambiente(0.02,0.02,0.02,1.0),
-            goma_negra_difuso(0.01,0.01,0.01,1.0),
-            goma_negra_especular(0.4,0.4,0.4,1.0);
+    Tupla4f perla_ambiente(0.25,0.20725,0.20725,1.0),
+              perla_difuso(1,0.829,0.829,1.0),
+              perla_especular(0.296648,0.296648,0.296648,1.0);
 
-    Material goma_negra = Material(goma_negra_difuso,goma_negra_especular,goma_negra_ambiente,1.0*128.0);
+    Material perla = Material(perla_difuso,perla_especular,perla_ambiente,0.088*128.0);
 
-    e2->setMaterial(goma_negra);
-    e3->setMaterial(goma_negra);
-    c2->setMaterial(goma_negra);
+    e2->setMaterial(perla);
+    e3->setMaterial(perla);
+    c2->setMaterial(perla);
 }
 
 void ConectorInferior::dibuja(int modo_dibujado, bool puntos, bool lineas,bool solido, bool ajedrez){
     
     glPushMatrix();
+        glScalef(1.3,1.3,1.3);
         glTranslatef(-10,0,0);
         e2->VerTapas(true);
         e2->draw(modo_dibujado,puntos,lineas,solido,ajedrez);

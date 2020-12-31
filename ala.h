@@ -23,8 +23,7 @@ class Ala : public Malla3D
     
     void setGradoGiro(float angulo);
     void setGiroConector(float angulo, float altura);
-    void rotar(float angulo);
-
+    void Idle();
 } ;
 
 

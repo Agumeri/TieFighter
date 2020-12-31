@@ -15,20 +15,28 @@ class TieFighter : public Malla3D
 
     float pos_ala_izq = 0;
     float pos_ala_der = 0;
+
     float giroAlerones;
     float giroConector;
+    
     float altura_conector;
+    
     bool rotar_alas;
+
+    bool puede_girar_aleron = true;
+    bool puede_girar_conector = true;
+    bool puede_desplegar = true;
    public:
     TieFighter();
     void dibuja(int modo_dibujado, bool puntos, bool lineas,bool solido, bool ajedrez);
     void posicionVelocidad(float grado_giro);
     void posicionAtaque(float grado_giro);
-    void posicionSaltoET(bool parar_rotacion);
+    void posicionSaltoET(float velocidad);
     void rotarAleron();
     void rotarConector();
     void rotarAlas(bool rotar=true);
     void desplegarAlas();
+    void IdlePosition();
 } ;
 
 

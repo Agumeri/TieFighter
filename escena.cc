@@ -28,6 +28,8 @@ Escena::Escena()
       Tupla2f dir_luz(0,0); // direccion de la luz
       luz_p = new LuzPosicional(pos_luz,GL_LIGHT1,colAmb,colEspc,colDif);
       luz_d = new LuzDireccional(dir_luz,GL_LIGHT2,colAmb,colEspc,colDif);
+   
+   
    //
 
    // Materiales
@@ -68,7 +70,7 @@ Escena::Escena()
 
    // objetos de revolución
       cono = new Cono(2,20,80,40,true,false);
-      esfera = new Esfera(10,20,40,true,false);
+      esfera = new Esfera(10,20,40,true,true);
       esfera_aux = new Esfera(10,20,10,true,true);
       cilindro = new Cilindro(2,20,40,20,true,true);
    
@@ -97,7 +99,7 @@ Escena::Escena()
       cubo->setMaterial(bronze);
       tetraedro->setMaterial(silver);
       cono->setMaterial(silver);
-      esfera->setMaterial(goma_negra);
+      esfera->setMaterial(bronze);
       cilindro->setMaterial(ruby);
       obj_ply->setMaterial(silver);
       peon->setMaterial(ruby);
@@ -160,8 +162,8 @@ void Escena::dibujar()
    if(modo_visual[4]){
       glEnable(GL_LIGHTING);
 
-      glShadeModel(GL_SMOOTH);
-      // glShadeModel(GL_FLAT);
+      // glShadeModel(GL_SMOOTH);
+      glShadeModel(GL_FLAT);
 
       if (pos_activada)
       {
@@ -300,7 +302,7 @@ void Escena::dibujar()
 bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 {
    using namespace std ;
-   cout << "Tecla pulsada: '" << tecla << "'" << endl;
+   // cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir=false;
    switch( toupper(tecla) )
    {
@@ -312,8 +314,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             printf("'V': Seleccion de modo de visualización\n");
             printf("'D': Seleccion de dibujado\n");
             printf("'Z': Seleccionar tapas a dibujar\n");
-            printf("'J': Animación automática del objeto jerarquico\n");
-            // printf("'M': Mover manualmente los grados de libertad\n");      
+            printf("'A': Activar/Desactivar animación modelo jerárquico\n");
+            printf("'E': Mover manualmente el grado de libertad de los objetos jerárquicos\n");
             printf("'Q': Salir del programa\n");       
          }else {
             salir=true ;
@@ -322,7 +324,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'O' :
          // ESTAMOS EN MODO SELECCION DE OBJETO
          modoMenu=SELOBJETO; 
-         printf("Opciones disponibles: \n'C': Cubo \n'T': Tetraedro \n'Y': ObjetoPLY \n'H': Peon \n'W': TieFighter \n'J': Cono \n'B': Cilindro \n'N': Esfera \n'M': OBJETOS SIMULTANEOS \n");
+         printf("Opciones disponibles: \n'C': Cubo \n'T': Tetraedro \n'Y': ObjetoPLY \n'H': Peon \n'W': TieFighter \n'B': Cilindro \n'N': Esfera \n'M': OBJETOS SIMULTANEOS \n");
          break ;
         case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
@@ -339,8 +341,22 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoMenu=TAPASEJECUCION;
          break ;
 
-       case 'J' :
-         printf("Opciones disponibles: \n'A': Activacion/desactivacion de la \n'5': Posicion Velocidad\n'6': Posicion Ataque\n'7': Posicion salto Espacio-Tiempo\n");
+       case 'A' :
+         printf("Opciones disponibles: \n'+': Aumentar velocidad\n'-': Disminuir velocidad\n");
+            if (!animacion_activada )
+            {
+               printf("Animación activada.\n");
+               animacion_activada = true;
+            }
+            else
+            {
+               printf("Animación desactivada.\n");
+               animacion_activada = false;
+            }
+         break ;
+
+       case 'E' :
+         printf("Opciones disponibles: \n'F': Posicion por defecto\n'5': Posicion Velocidad\n'6': Posicion Ataque\n'7': Posicion salto Espacio-Tiempo\n");
          modoMenu=ANIMACION;;
          break ;
          // COMPLETAR con los diferentes opciones de teclado
@@ -407,9 +423,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break;
 
          //-------------------------------------------------
-         //OBJETO PLY "LATA"
+         //OBJETO JERARQUICO "TieFighter"
          case 'W':
-         // ESTAMOS EN MODO Tetraedro SELECCIONADO
          if(modoMenu==SELOBJETO){
             if(obj != TIEFIGHTER){
                printf("Objeto TIE FIGHTER seleccionado.\n");
@@ -735,75 +750,99 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       //**************************************************************************
 
       
-      // ACTIVAR/DESACTIVAR ANIMACION
-      case 'A':
-         if (modoMenu == ANIMACION)
-         {
+      // // ACTIVAR/DESACTIVAR ANIMACION
+      // case 'A':
+      //    if (modoMenu == ANIMACION)
+      //    {
 
-            if (!animacion_activada )
-            {
-               printf("Animación activada.\n");
-               animacion_activada = true;
-            }
-            else
-            {
-               printf("Animación desactivada.\n");
-               animacion_activada = false;
-            }
-         }
-         else
+      //       if (!animacion_activada )
+      //       {
+      //          printf("Animación activada.\n");
+      //          animacion_activada = true;
+      //       }
+      //       else
+      //       {
+      //          printf("Animación desactivada.\n");
+      //          animacion_activada = false;
+      //       }
+      //    }
+      //    else
+      //    {
+      //       modoMenu = NADA;
+      //    }
+      // break;
+
+      case 'F':
+         if(modoMenu == ANIMACION)
          {
-            modoMenu = NADA;
+            animacion_activada = false;
+            tiefighter->IdlePosition();
+            // if(!grado_uno)
+            // {
+            //    printf("Grado uno activado.\n");
+            //    grado_uno = true;
+            // } 
+            // else
+            // {
+            //    printf("Grado uno desactivado.\n");
+            //    grado_uno = false;
+            // } 
+
          }
       break;
-
 
       case '5':
          if(modoMenu == ANIMACION)
          {
-            if(!grado_uno)
-            {
-               printf("Grado uno activado.\n");
-               grado_uno = true;
-            } 
-            else
-            {
-               printf("Grado uno desactivado.\n");
-               grado_uno = false;
-            } 
+            animacion_activada = false;
+            tiefighter->posicionVelocidad(5);
+            // if(!grado_uno)
+            // {
+            //    printf("Grado uno activado.\n");
+            //    grado_uno = true;
+            // } 
+            // else
+            // {
+            //    printf("Grado uno desactivado.\n");
+            //    grado_uno = false;
+            // } 
+
          }
       break;
 
       case '6':
          if(modoMenu == ANIMACION)
          {
-            if(!grado_dos)
-            {
-               printf("Grado dos activado.\n");
-               grado_dos = true;
-            } 
-            else
-            {
-               printf("Grado dos desactivado.\n");
-               grado_dos = false;
-            }
+            animacion_activada = false;
+            tiefighter->posicionAtaque(1);
+            // if(!grado_dos)
+            // {
+            //    printf("Grado dos activado.\n");
+            //    grado_dos = true;
+            // } 
+            // else
+            // {
+            //    printf("Grado dos desactivado.\n");
+            //    grado_dos = false;
+            // }
          }
       break;
 
       case '7':
          if(modoMenu == ANIMACION)
          {
-            if(!grado_tres)
-            {
-               printf("Grado tres activado.\n");
-               grado_tres = true;
-            } 
-            else
-            {
-               printf("Grado tres desactivado.\n");
-               grado_tres = false;
-            } 
-               
+            animacion_activada = false;
+            tiefighter->posicionSaltoET(5);
+            // if(!grado_tres)
+            // {
+            //    printf("Grado tres activado.\n");
+            //    grado_tres = true;
+            // } 
+            // else
+            // {
+            //    printf("Grado tres desactivado.\n");
+            //    grado_tres = false;
+            // } 
          }
       break;
       //**************************************************************************
@@ -883,16 +922,17 @@ void Escena::change_observer()
 }
 
 void Escena::animarModeloJerarquico() {
-   bool actuar = grado_tres;
-         
    if(animacion_activada){
-      if(grado_uno) tiefighter->posicionVelocidad(0.005);
-
-
-      if(grado_dos) tiefighter->posicionAtaque(0.005);
-
-
-      if(grado_tres) tiefighter->posicionSaltoET(actuar);
-      else tiefighter->posicionSaltoET(actuar);
+      tiefighter->posicionVelocidad(0.005);
+      tiefighter->posicionAtaque(0.005);
+      tiefighter->posicionSaltoET(0.005);
    }
 }
+
+// void Escena::animarGradosLibertad() {
+//    if(!animacion_activada){
+//       if(grado_uno) tiefighter->posicionVelocidad(0.005);
+//       if(grado_dos) tiefighter->posicionAtaque(0.005);
+//       if(grado_tres) tiefighter->posicionSaltoET();
+//    }
+// }
