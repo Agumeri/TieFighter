@@ -12,9 +12,11 @@ class Textura{
         std::vector<unsigned char> data;
         int width, height;
         jpg::Imagen * pimg = NULL;
+        unsigned char * texels; 
 
     public:
-        Textura(std::string archivo);
+        Textura();
+        Textura(const std::string &archivo);
         Textura(const Textura &aux);
         void activar(); 
 };

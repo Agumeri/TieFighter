@@ -9,8 +9,6 @@
 
 Escena::Escena()
 {
-   glEnable(GL_NORMALIZE);
-
    Front_plane       = 50.0;
    Back_plane        = 2000.0;
    Observer_distance = 2*Front_plane;
@@ -24,7 +22,7 @@ Escena::Escena()
               colEspc(1.0,1.0,1.0,1.0),
               colDif(1.0,1.0,1.0,1.0);
       //
-      Tupla3f pos_luz(50,50,0);  // posicion de la luz
+      Tupla3f pos_luz(100,50,0);  // posicion de la luz
       Tupla2f dir_luz(0,0); // direccion de la luz
       luz_p = new LuzPosicional(pos_luz,GL_LIGHT1,colAmb,colEspc,colDif);
       luz_d = new LuzDireccional(dir_luz,GL_LIGHT2,colAmb,colEspc,colDif);
@@ -64,7 +62,6 @@ Escena::Escena()
    // ..... CREAR DATOS, NO LA ESTRUCTURA DE LA ESCENA.
 
    // creados "a mano"
-      cubo = new Cubo();
       tetraedro = new Tetraedro();
    //
 
@@ -95,8 +92,22 @@ Escena::Escena()
       tiefighter = new TieFighter();
    //
 
+   // objetos usados en la escena (ademas del objeto jerárquico)
+      fondo1 = new Cuadro();
+      fondo2 = new Cuadro();
+      fondo3 = new Cuadro();
+      fondo4 = new Cuadro();
+      suelo = new Cuadro();
+      techo = new Cuadro();
+
+      planeta1 = new Cubo();
+      planeta2 = new Cubo();
+      planeta3 = new Cubo();
+      planeta4 = new Cubo();
+   //
+
+   
    // asignamos los materiales a los objetos
-      cubo->setMaterial(bronze);
       tetraedro->setMaterial(silver);
       cono->setMaterial(silver);
       esfera->setMaterial(bronze);
@@ -112,6 +123,41 @@ Escena::Escena()
       peon_goma_negra->setMaterial(ruby);
 
       esfera_aux->setMaterial(ruby);
+
+      /*****************************/
+
+      planeta1->setMaterial(bronze);
+      planeta2->setMaterial(bronze);
+      planeta3->setMaterial(bronze);
+      planeta4->setMaterial(bronze);
+
+      fondo1->setMaterial(silver);
+      fondo2->setMaterial(silver);
+      fondo3->setMaterial(silver);
+      fondo4->setMaterial(silver);
+      suelo->setMaterial(silver);
+
+   //
+
+   //  asignamos las imagen de la texturas
+      minecraft = Textura("img/minecraftGrass.jpg");
+      asteroide = Textura("img/asteroid.jpg");
+      fondo = Textura("img/fondo.jpg");
+      espacio = Textura("img/fondo2.jpg");
+
+      // asignamos las texturas a los objetos que deseemos
+      planeta1->setTextura(asteroide);
+      planeta2->setTextura(minecraft);
+      planeta3->setTextura(asteroide);
+      planeta4->setTextura(minecraft);
+
+
+      fondo1->setTextura(fondo);
+      fondo2->setTextura(espacio);
+      fondo3->setTextura(espacio);
+      fondo4->setTextura(espacio);
+      suelo->setTextura(espacio);
+      techo->setTextura(espacio);
    //
 
 }
@@ -156,14 +202,19 @@ void Escena::dibujar()
    // Desactivamos la iluminacion para que se vean los ejes
    if(glIsEnabled(GL_LIGHTING)) glDisable(GL_LIGHTING);
 
+   // Desactivamos la iluminacion para que se vean los ejes
+   if(glIsEnabled(GL_TEXTURE_2D)) glDisable(GL_TEXTURE_2D);
+
    ejes.draw();
 
    // si el booleano de luz esta activaddo, activamos luz
    if(modo_visual[4]){
       glEnable(GL_LIGHTING);
+      glEnable(GL_NORMALIZE);
+      glEnable(GL_TEXTURE_2D);
 
-      // glShadeModel(GL_SMOOTH);
-      glShadeModel(GL_FLAT);
+      glShadeModel(GL_SMOOTH);
+      // glShadeModel(GL_FLAT);
 
       if (pos_activada)
       {
@@ -185,12 +236,21 @@ void Escena::dibujar()
          glDisable(GL_LIGHT2);
       }
    }
+   else
+   {
+      if(glIsEnabled(GL_TEXTURE_2D)) glDisable(GL_TEXTURE_2D);
+   }
 
    // Comentar para desactivar las texturas
-   // glEnable(GL_TEXTURE_2D);
+   
+   // glEnable(GL_TEXTURE_GEN_S);
+   // glEnable(GL_TEXTURE_GEN_T);
 
-   // Si las texturas estan activadas, ponemos el booleano correspondiente a true
-   if(glIsEnabled(GL_TEXTURE_2D)) texturas_activadas = true;
+   // // Si las texturas estan activadas, ponemos el booleano correspondiente a true
+   // if(glIsEnabled(GL_TEXTURE_2D)) texturas_activadas = true;
+   // else glDisable(GL_TEXTURE_2D);
+
+   // if(texturas_activadas) glEnable(GL_TEXTURE_2D);
 
    // seleccion del modo de dibujado
    if(tipo_dibujo==INMEDIATO) modo_dibujado = 1;
@@ -220,10 +280,71 @@ void Escena::dibujar()
 
 
    if(obj == CUBO){
-      glMatrixMode(GL_MODELVIEW);
       glPushMatrix();
-         cubo->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+         glScalef(20,20,1);
+         glTranslatef(0,0,-800);
+         fondo1->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
       glPopMatrix();
+
+      glPushMatrix();
+         glScalef(1,20,20);
+         glTranslatef(-800,0,0);
+         glRotatef(90,0,1,0);
+         fondo2->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glScalef(1,20,20);
+         glTranslatef(800,0,0);
+         glRotatef(-90,0,1,0);
+         fondo3->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glScalef(20,20,1);
+         glTranslatef(0,0,800);
+         glRotatef(180,0,1,0);
+         fondo4->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glScalef(20,1,20);
+         glTranslatef(0,-800,0);
+         glRotatef(-90,1,0,0);
+         suelo->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glScalef(20,1,20);
+         glTranslatef(0,1000,0);
+         glRotatef(90,1,0,0);
+         techo->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+      
+      glPushMatrix();
+         glTranslatef(-200,300,-500);
+         planeta1->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(200,-100,-500);
+         planeta2->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(200,100,500);
+         planeta4->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(-200,300,500);
+         planeta3->draw(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
+      glPushMatrix();
+         tiefighter->dibuja(modo_dibujado, modo_visual[0], modo_visual[1], modo_visual[2], modo_visual[3]);
+      glPopMatrix();
+
    } 
 
    if(obj == TETRAEDRO){  
@@ -330,7 +451,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'O' :
          // ESTAMOS EN MODO SELECCION DE OBJETO
          modoMenu=SELOBJETO; 
-         printf("Opciones disponibles: \n'C': Cubo \n'T': Tetraedro \n'Y': ObjetoPLY \n'H': Peon \n'W': TieFighter \n'B': Cilindro \n'N': Esfera \n'M': OBJETOS SIMULTANEOS \n");
+         printf("Opciones disponibles: \n'C': ESCENA \n'T': Tetraedro \n'Y': ObjetoPLY \n'H': Peon \n'W': TieFighter \n'B': Cilindro \n'N': Esfera \n'M': OBJETOS SIMULTANEOS \n");
          break ;
         case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
@@ -349,6 +470,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
        case 'A' :
          printf("Opciones disponibles: \n'+': Aumentar velocidad\n'-': Disminuir velocidad\n");
+            modoMenu=ANIMACION;
             if (!animacion_activada )
             {
                printf("Animación activada.\n");
@@ -363,7 +485,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
        case 'E' :
          printf("Opciones disponibles: \n'F': Posicion por defecto\n'5': Posicion Velocidad\n'6': Posicion Ataque\n'7': Posicion salto Espacio-Tiempo\n");
-         modoMenu=ANIMACION;;
+         modoMenu=ANIMACION;
          break ;
          // COMPLETAR con los diferentes opciones de teclado
       
@@ -441,21 +563,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
          }
          break;
-
-         //-------------------------------------------------
-         //OBJETO REVOLUCIÓN "CONO"
-         // case 'J':
-         // // ESTAMOS EN MODO Tetraedro SELECCIONADO
-         // if(modoMenu==SELOBJETO){
-         //    if(obj != CONO){
-         //       printf("Cono seleccionado.\n");
-         //       obj=CONO;
-         //    }else{
-         //       printf("Ocultando cono\n");
-         //       obj=VACIO;
-         //    }
-         // }
-         // break;
 
          //-------------------------------------------------
          //OBJETO REVOLUCIÓN "CILINDRO"
@@ -626,7 +733,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                if (tipo_visual != ILUMINACION && !modo_visual[4])
                {
                   printf("Visualizacion en modo ILUMINADO activada.\n");
-                  printf("Opciones disponibles: \n'0': Luz posicional; \n'4': Luz diferida\n'X': Activar variacion angulo alfa\n'K': Activar variacion angulo beta\n'>': Incrementar angulo\n'<' Decrementar angulo\n");
+                  printf("Opciones disponibles: \n'0': Luz posicional; \n'4': Luz diferida\n'X': Activar variacion angulo alfa\n'K': Activar variacion angulo beta\n'>': Incrementar angulo\n'<' Decrementar angulo\n'R': Animar automaticamente una luz puntual\n");
                   tipo_visual = ILUMINACION;
                   modo_visual[4] = true;
                   break;
@@ -733,6 +840,24 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                   if(alfa) this->luz_d->variarAnguloAlpha(-10);
                   else if(beta) this->luz_d->variarAnguloBeta(-10);
                }
+            }
+         break;
+
+         case 'R':
+            if (modoMenu == SELVISUALIZACION)
+            {
+               if (tipo_visual == ILUMINACION && modo_visual[4] && !animar_luz)
+               {
+                  direc_activada = false;
+                  animar_luz = true;
+                  printf("Animacion luz posicional activada\n");
+               }
+               else
+               {
+                  animar_luz = false;
+                  printf("Animacion luz posicional desactivada\n");
+               }
+               
             }
          break;
 
@@ -851,6 +976,22 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             // } 
          }
       break;
+
+      case '+':
+         if(modoMenu == ANIMACION)
+         {
+            if(animacion_activada) modificarVelocidadAnimacion(0.001);
+            std::cout << "\nLA VELOCIDAD ES: " << velocidad << std::endl;
+         }
+      break;
+
+      case '-':
+         if(modoMenu == ANIMACION)
+         {
+            if(animacion_activada) modificarVelocidadAnimacion(-0.001);
+            std::cout << "\nLA VELOCIDAD ES: " << velocidad << std::endl;            
+         }
+      break;
       //**************************************************************************
    }
    
@@ -929,9 +1070,34 @@ void Escena::change_observer()
 
 void Escena::animarModeloJerarquico() {
    if(animacion_activada){
-      tiefighter->posicionVelocidad(0.005);
-      tiefighter->posicionAtaque(0.005);
-      tiefighter->posicionSaltoET(0.005);
+      tiefighter->posicionVelocidad(velocidad);
+      tiefighter->posicionAtaque(velocidad);
+      tiefighter->posicionSaltoET(velocidad);
+   }
+}
+
+void Escena::animarLuzPuntual(){
+   // funcion circunferencia: x² + y² = r²
+   // en nuestro caso:        x² + y² = 50²
+   // x = sqrt(50² - y²)
+   // y = sqrt(50² - x²)
+   if (animar_luz)
+   {
+      float _y = luz_p->getY();
+
+      if(subir_luz && _y<200) _y += 0.01;
+      else {
+         subir_luz = false; 
+         bajar_luz = true;
+      }
+
+      if(bajar_luz && _y > -200 ) _y -= 0.01;
+      else {
+         subir_luz = true;
+         bajar_luz = false;
+      }
+      
+      this->luz_p->modificarPosicion(100, _y, 0);
    }
 }
 
@@ -942,3 +1108,23 @@ void Escena::animarModeloJerarquico() {
 //       if(grado_tres) tiefighter->posicionSaltoET();
 //    }
 // }
+
+void Escena::modificarVelocidadAnimacion(float valor) {
+   float valor_nuevo = velocidad + valor;
+
+   if(valor > 0){
+      if (valor_nuevo <= 0.03) velocidad = valor_nuevo;
+      else {
+         printf("\nVelocidad demasiado rapida. Reiniciando velocidad...");
+         velocidad = 0.005;
+      }
+   }
+   else{
+      if (valor_nuevo >= 0.0000001) velocidad = valor_nuevo;
+      else {
+         printf("\nVelocidad demasiado lenta. Reiniciando velocidad...");
+         velocidad = 0.005;
+      }
+   }
+}
+

@@ -19,6 +19,7 @@
 #include "conector_inferior.h"
 #include "ala.h"
 #include "tiefighter.h"
+#include "cuadro.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, TAPASEJECUCION, ANIMACION, MODGRADOS} menu;
 typedef enum {VACIO, CUBO, TETRAEDRO, OBJPLY, PEON, LATA, BETH, CONO, CILINDRO, ESFERA, OBJSIMULTANEOS, TIEFIGHTER} objetos;
@@ -49,14 +50,15 @@ class Escena
 
    // inicialización de los enum
    menu modoMenu=NADA;
-   objetos obj=VACIO;
+   objetos obj=CUBO;
    dibujado tipo_dibujo=INMEDIATO;
    visualizado tipo_visual=SOLIDO;
 
+    float velocidad = 0.005;
    
    // Objetos de la escena
    Ejes ejes;
-   Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
+
    Tetraedro * tetraedro = nullptr ; // es importante inicializarlo a 'nullptr'
    // objetos PLY
     ObjPLY * obj_ply = nullptr; // creamos un objeto para poder dibujar los objetos ply
@@ -83,6 +85,22 @@ class Escena
     TieFighter * tiefighter = nullptr;
    //
 
+
+   // objetos de la escena
+    Cuadro * fondo1 = nullptr;
+    Cuadro * fondo2 = nullptr;
+    Cuadro * fondo3 = nullptr;
+    Cuadro * fondo4 = nullptr;
+    Cuadro * suelo = nullptr;
+    Cuadro * techo = nullptr;
+
+    Cubo * planeta1 = nullptr;
+    Cubo * planeta2 = nullptr;
+    Cubo * planeta3 = nullptr;
+    Cubo * planeta4 = nullptr;
+
+   // 
+
    // luces
    LuzPosicional * luz_p = nullptr;
    LuzDireccional * luz_d = nullptr;
@@ -90,13 +108,13 @@ class Escena
    //
 
    // texturas
-    Textura * minecraft = nullptr;
-    Textura * madera = nullptr;
-    Textura * cocacola = nullptr;
-    Textura * cabinaTF = nullptr;
+    Textura minecraft; 
+    Textura fondo;
+    Textura espacio;
+    Textura asteroide;
    //
     //Array para comprobar que modos de visualizacion esta activado
-    bool modo_visual[5] = {false,false,true,false,false}; // puntos, lineas, solido, ajedrez, iluminado
+    bool modo_visual[5] = {false,false,true,false,true}; // puntos, lineas, solido, ajedrez, iluminado
 
     // Booleanos para las tapas
     bool tapas = true;
@@ -104,6 +122,9 @@ class Escena
     // Booleanos para las luces
     bool pos_activada = true;
     bool direc_activada = false;
+    bool animar_luz = false;
+    bool subir_luz = true;
+    bool bajar_luz = false;
 
     
 
@@ -117,7 +138,7 @@ class Escena
          grado_tres = false;
 
     // Booleanos para las texturas
-    bool texturas_activadas = false;
+    bool texturas_activadas = true;
     
    public:
 
@@ -133,6 +154,9 @@ class Escena
 	void teclaEspecial( int Tecla1, int x, int y );
     
     void animarModeloJerarquico();
-    void animarGradosLibertad();
+    void animarLuzPuntual();
+    // void animarGradosLibertad();
+
+    void modificarVelocidadAnimacion(float valor);
 };
 #endif

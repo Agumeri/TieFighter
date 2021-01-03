@@ -31,7 +31,7 @@ Imagen::Imagen( const std::string & nombreArchivo )
 		exit(1);
 	}
 	
-	//cout << " hecho." << endl << flush ;
+	// cout << " hecho." << endl << flush ;
 }
 
 //**********************************************************************

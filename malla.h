@@ -54,6 +54,9 @@ class Malla3D
       // asignamos la textura pasado por parametro a la malla
       void setTextura(Textura text);
 
+      // limpiar vector ct
+      virtual void asignarCoordenadasTexturas();
+
 protected:
    Textura * textura = nullptr;
    std::vector<Tupla2f> ct;
@@ -77,7 +80,8 @@ protected:
           id_vbo_ver_chess = 0,
           id_vbo_color_chess_a = 0,
           id_vbo_color_chess_b = 0,
-          id_vbo_tri_a = 0, id_vbo_tri_b = 0;
+          id_vbo_tri_a = 0, id_vbo_tri_b = 0,
+          id_vbo_texturas = 0;
 } ;
 
 

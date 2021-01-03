@@ -23,3 +23,9 @@ LuzPosicional::LuzPosicional(Tupla3f direccion, GLenum idLuzOpenGL, Tupla4f colo
     this->colorDifuso = colorDifuso;
     this->colorEspecular = colorEspecular;
 }
+
+void LuzPosicional::modificarPosicion(float x, float y, float z){
+    posicion(0) = x;
+    posicion(1) = y;
+    posicion(2) = z;
+}

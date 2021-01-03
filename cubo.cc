@@ -26,6 +26,7 @@ Cubo::Cubo(float lado)
    v[5] = {lado/2, lado/2, -lado/2};     //v5
    v[6] = {-lado/2, lado/2, -lado/2};    //v6
    v[7] = {-lado/2, -lado/2, -lado/2};   //v7
+   v[7] = {-lado/2, -lado/2, -lado/2};   //v7
    
 
    // Tabla de caras
@@ -54,4 +55,20 @@ Cubo::Cubo(float lado)
    f[11] = {0, 7, 1};
 
    tam_f = f.size();
+}
+
+void Cubo::asignarCoordenadasTexturas(){
+   // Nos aseguramos de que el objeto tiene el vector ct limpio
+   ct.clear();
+
+   // asignamos la coordenadas de textura al vector ct
+   ct.push_back({1,1});
+   ct.push_back({0,1});
+   ct.push_back({1,0});
+   ct.push_back({0,0});
+
+   ct.push_back({1,1});
+   ct.push_back({1,0});
+   ct.push_back({0,0});
+   ct.push_back({0,1});
 }

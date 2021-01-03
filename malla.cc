@@ -142,6 +142,16 @@ void Malla3D::draw_ModoInmediato(std::string color_pintar)
   glEnableClientState(GL_NORMAL_ARRAY);
   glNormalPointer(GL_FLOAT, 0, nv.data());
 
+
+  // si la textura está indicada, activamos el flag correspondiente
+  // y le aplicamos las coordenadas de esta
+  if(!ct.empty() && this->textura != nullptr){
+   //   std::cout << "\nACTIVANDO TEXTURA\n" << std::endl;
+   //   this->textura->activar();
+     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+     glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+  } 
+
   // si fuese objeto revolucion, M tiene que ser hasta SIN TAPAS o M + tapas
 //   glDrawElements( GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
   glDrawElements( GL_TRIANGLES, tam_f*3, GL_UNSIGNED_INT, f.data());
@@ -150,6 +160,7 @@ void Malla3D::draw_ModoInmediato(std::string color_pintar)
   glDisableClientState( GL_VERTEX_ARRAY );
   glDisableClientState( GL_COLOR_ARRAY );
   glDisableClientState( GL_NORMAL_ARRAY );
+  glDisableClientState( GL_TEXTURE_COORD_ARRAY );
   
 }
 // -----------------------------------------------------------------------------
@@ -186,6 +197,7 @@ void Malla3D::draw_ModoDiferido(std::string color_pintar)
       id_vbo_color_point = CrearVBO(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(float) * c_point.size(), c_point.data());
       id_vbo_color_line = CrearVBO(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(float) * c_line.size(), c_line.data());
       id_vbo_color_dif = CrearVBO(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(float) * c_dif.size(), c_dif.data());
+      id_vbo_texturas = CrearVBO(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(float) * ct.size(), ct.data());
    }
 
    // una vez creados, procedemos a visualizar la malla
@@ -222,7 +234,19 @@ void Malla3D::draw_ModoDiferido(std::string color_pintar)
 
    glEnableClientState(GL_NORMAL_ARRAY);
    glNormalPointer(GL_FLOAT, 0, nv.data());
-   
+
+   // si la textura está indicada, activamos el flag correspondiente
+   // y le aplicamos las coordenadas de esta
+   if(!ct.empty() && this->textura != nullptr){
+     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
+     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_vbo_texturas);
+
+     glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+
+     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   } 
+
    // visualizar triangulos con glDrawElements (puntero a tabla == 0)
    // activar VBO de triangulos
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri);
@@ -237,7 +261,7 @@ void Malla3D::draw_ModoDiferido(std::string color_pintar)
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_NORMAL_ARRAY);
-
+   glDisableClientState( GL_TEXTURE_COORD_ARRAY );
 }
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
@@ -256,6 +280,18 @@ void Malla3D::draw(int modo_dibujado, bool puntos, bool lineas,bool solido, bool
    // aplicamos el material si está indicado en la malla
    if(m != nullptr) m->aplicar();
 
+   // asignamos las coordenadas de textura
+   if(ct.empty()) this->asignarCoordenadasTexturas();
+
+   if(textura != nullptr && !ct.empty()){
+      // std::cout << "ACTIVANDO LA TEXTURA :(" << std::endl;
+      this->textura->activar();
+   }
+
+   // si está activada la textura, pero el objeto no tiene textura, desactivamos el flag
+   // para que asi se aplique el color del material, y no el de la textura cargada
+   if(glIsEnabled(GL_TEXTURE_2D) && textura == nullptr) glDisable(GL_TEXTURE_2D);
+   
    // contemplar que aspectos se van a visualizar (puntos, lineas, solido, ajedrez)
    // solido y ajedrez serán independientes, mientras este ajedrez, no se podran ver los otros 3
    if (puntos){
@@ -353,6 +389,7 @@ void Malla3D::calcular_normales(){
    // normalizamos cada uno de los vectores;
    for(int i=0; i<nv.size(); i++){
       prod_esc = sqrt(pow(nv[i][0],2) + pow(nv[i][1],2) + pow(nv[i][2],2));
+      
       nv[i][0] = nv[i][0] / prod_esc;
       nv[i][1] = nv[i][1] / prod_esc;
       nv[i][2] = nv[i][2] / prod_esc;
@@ -360,6 +397,10 @@ void Malla3D::calcular_normales(){
    // for(int i=0; i<nv.size(); i++) nv[i] = nv[i].normalized();
 
    // std::cout << "X: " << nv[0][0] << " Y: " << nv[0][1] << " Z: " << nv[0][2] << std::endl;
+   for(int i=0; i<nv.size(); i++){
+      float d = sqrt(pow(nv[i][0],2) + pow(nv[i][1],2) + pow(nv[i][2],2));
+      std::cout << "MODULO: " << d << std::endl;
+   }
 }
 
 void Malla3D::setMaterial(Material mat){
@@ -367,5 +408,9 @@ void Malla3D::setMaterial(Material mat){
 }
 
 void Malla3D::setTextura(Textura text){
-   textura = new Textura(text);
+   this->textura = new Textura(text);
+}
+
+void Malla3D::asignarCoordenadasTexturas(){
+   this->ct.clear();
 }

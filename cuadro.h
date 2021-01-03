@@ -1,16 +1,8 @@
-// #############################################################################
-//
-// Informática Gráfica (Grado Informática)
-//
-// Archivo: Cubo.h
-
-//
-// #############################################################################
-
-#ifndef CUBO_H_INCLUDED
-#define CUBO_H_INCLUDED
+#ifndef CUADRO_H_INCLUDED
+#define CUADRO_H_INCLUDED
 
 #include "aux.h"
+#include "malla.h"
 
 // *****************************************************************************
 //
@@ -22,10 +14,10 @@
 // Cubo con centro en el origen y lado unidad por defecto
 // (tiene 8 vertices y 6 caras)
 
-class Cubo : public Malla3D
+class Cuadro : public Malla3D
 {
    public:
-   Cubo(float l=50) ;
+   Cuadro(float l=100) ;
    void asignarCoordenadasTexturas();
 
 } ;
